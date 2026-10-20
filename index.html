@@ -37,6 +37,7 @@
 
   /* ---------- falling petals ---------- */
   #petals { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+  body.celebrate #petals { z-index: 35; }
   .petal {
     position: absolute; top: -40px;
     width: 12px; height: 14px;
@@ -181,10 +182,63 @@
   .heart-zone p { color: var(--ink-soft); font-size: 14px; margin-top: 10px; }
   #love-count { font-family: "Playfair Display", serif; font-size: 20px; color: var(--rose); margin-top: 6px; min-height: 30px; }
   .pop {
-    position: fixed; pointer-events: none; z-index: 20; font-size: 22px;
+    position: fixed; pointer-events: none; z-index: 40; font-size: 22px;
     animation: pop 1.4s ease-out forwards;
   }
   @keyframes pop { to { transform: translate(var(--dx), -160px) scale(.6); opacity: 0; } }
+
+  .progress { max-width: 280px; margin: 14px auto 0; }
+  .bar { height: 10px; border-radius: 99px; background: rgba(201, 80, 107, .14); overflow: hidden; }
+  .bar span { display: block; height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, var(--rose-soft), var(--rose)); transition: width .3s ease; }
+  .progress small { display: block; margin-top: 6px; font-size: 13px; color: var(--ink-soft); }
+  #reopen-gift {
+    display: none; margin: 18px auto 0; padding: 10px 20px; border: 0; border-radius: 99px; cursor: pointer;
+    font: 500 15px "Be Vietnam Pro", sans-serif; color: #fff;
+    background: linear-gradient(135deg, var(--rose), #a83552); box-shadow: var(--shadow);
+  }
+  #reopen-gift.show { display: inline-block; }
+
+  /* ---------- gift modal ---------- */
+  #gift {
+    position: fixed; inset: 0; z-index: 30; display: none; place-items: center; padding: 16px;
+    background: rgba(59, 42, 44, .55); backdrop-filter: blur(4px);
+  }
+  #gift.show { display: grid; animation: fadein .4s ease; }
+  @keyframes fadein { from { opacity: 0; } }
+  .giftbox { text-align: center; color: #fff; cursor: pointer; }
+  .giftbox p { margin-top: 26px; font-size: 16px; animation: pulse 1.6s ease-in-out infinite; }
+  .box { position: relative; width: 150px; height: 130px; margin: 0 auto; animation: shake 1.2s ease-in-out infinite; }
+  @keyframes shake { 0%, 60%, 100% { transform: rotate(0); } 70% { transform: rotate(-6deg); } 80% { transform: rotate(6deg); } 90% { transform: rotate(-3deg); } }
+  .box-base { position: absolute; left: 10px; right: 10px; bottom: 0; height: 90px; border-radius: 6px; background: linear-gradient(160deg, #e0607d, #b8344f); }
+  .box-lid { position: absolute; left: 0; right: 0; top: 18px; height: 30px; border-radius: 6px; background: linear-gradient(160deg, #ef7a94, #c9506b); transition: transform .7s cubic-bezier(.3,1.6,.5,1); }
+  .box-base::after, .box-lid::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 18px; margin-left: -9px; background: #f7d58a; }
+  .bow { position: absolute; left: 50%; top: -20px; width: 60px; margin-left: -30px; font-size: 38px; line-height: 1; }
+  .giftbox.opening .box { animation: none; }
+  .giftbox.opening .box-lid { transform: translateY(-90px) rotate(-25deg); }
+
+  .voucher {
+    display: none; width: min(420px, 100%); max-height: calc(100vh - 32px); overflow-y: auto;
+    background: var(--paper); border-radius: 18px; padding: 30px 26px 24px; text-align: center;
+    box-shadow: 0 30px 80px -20px rgba(0,0,0,.5);
+    border: 2px dashed rgba(201, 80, 107, .35); outline: 8px solid var(--paper);
+    animation: zoomin .6s cubic-bezier(.2,1.4,.4,1);
+  }
+  @keyframes zoomin { from { transform: scale(.6); opacity: 0; } }
+  #gift.opened .giftbox { display: none; }
+  #gift.opened .voucher { display: block; }
+  .voucher .tag { font-family: "Playfair Display", serif; font-size: 12px; letter-spacing: .3em; text-transform: uppercase; color: var(--gold); }
+  .voucher h2 { font-family: "Dancing Script", cursive; font-size: 40px; line-height: 1.15; color: var(--rose); margin: 6px 0 4px; }
+  .voucher .lead { font-size: 15px; color: var(--ink-soft); margin-bottom: 16px; }
+  .voucher ul { list-style: none; text-align: left; margin: 0 auto 16px; display: grid; gap: 10px; }
+  .voucher li { background: #fff; border: 1px solid rgba(201, 80, 107, .14); border-radius: 12px; padding: 10px 14px; font-size: 15px; }
+  .voucher .how { font-size: 14px; color: var(--ink-soft); margin-bottom: 14px; }
+  .voucher .meta { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; color: var(--ink-soft); border-top: 1px dashed rgba(201, 80, 107, .3); padding-top: 12px; margin-bottom: 16px; }
+  .voucher .meta b { color: var(--ink); font-weight: 500; }
+  .voucher button {
+    padding: 11px 26px; border: 0; border-radius: 99px; cursor: pointer;
+    font: 500 15px "Be Vietnam Pro", sans-serif; color: #fff;
+    background: linear-gradient(135deg, var(--rose), #a83552);
+  }
 
   footer { text-align: center; margin-top: 70px; font-size: 13px; color: var(--ink-soft); }
 
@@ -249,10 +303,36 @@
     <button class="big-heart" id="heart" aria-label="Gửi tim">❤️</button>
     <p>Bấm vào trái tim nếu em cũng yêu anh 🥰</p>
     <div id="love-count" aria-live="polite"></div>
+    <div class="progress">
+      <div class="bar"><span id="bar"></span></div>
+      <small id="progress-text">Bấm đủ 100 lần sẽ có quà bất ngờ 🎁</small>
+    </div>
+    <button id="reopen-gift">🎁 Xem lại món quà</button>
   </section>
 
   <footer>Made with ♥ by chồng iuu · 20/10/2026</footer>
 </main>
+
+<div id="gift" role="dialog" aria-modal="true" aria-label="Món quà đặc biệt">
+  <div class="giftbox" id="giftbox" role="button" tabindex="0" aria-label="Chạm để mở quà">
+    <div class="box"><div class="box-base"></div><div class="box-lid"><span class="bow">🎀</span></div></div>
+    <p>Em đã thả đủ 100 trái tim! Chạm để mở quà nhé 🎁</p>
+  </div>
+  <div class="voucher">
+    <div class="tag">Phiếu quà tặng đặc biệt</div>
+    <h2>Dành riêng cho vợ yêu</h2>
+    <p class="lead">100 trái tim của em, anh nhận đủ rồi. Đây là phần thưởng của em:</p>
+    <ul>
+      <li>🎁 Một món quà bí mật anh đã chuẩn bị sẵn</li>
+      <li>🍽️ Một buổi hẹn hò tối nay, anh lo từ A tới Z</li>
+      <li>🧽 Một tuần anh rửa bát, không kêu ca</li>
+      <li>🤗 Vô hạn cái ôm, đổi bất cứ lúc nào</li>
+    </ul>
+    <p class="how">Cách đổi quà: chụp màn hình phiếu này gửi anh, hoặc chạy lại ôm anh một cái thật chặt.</p>
+    <div class="meta"><span>Mã quà: <b>VOYEU-2010</b></span><span>Hạn dùng: <b>mãi mãi</b></span></div>
+    <button id="close-gift">Em nhận quà ❤️</button>
+  </div>
+</div>
 
 <button id="music" aria-label="Bật/tắt nhạc" title="Nhạc nền">🎵</button>
 
@@ -325,7 +405,9 @@
 
   /* heart button */
   const msgs = ['Anh cũng yêu em! 💕', 'Yêu em nhiều hơn nữa 😘', 'Nhiều hơn cả sao trời ✨', 'Mãi mãi luôn nhé 💍', 'Vợ anh là nhất! 🥰'];
+  const GOAL = 100;
   let n = 0;
+  try { n = Math.min(+localStorage.getItem('loveCount') || 0, GOAL); } catch (_) {}
   function burst(x, y, count = 10) {
     const icons = ['💖', '💕', '🌸', '✨', '💗'];
     for (let i = 0; i < count; i++) {
@@ -339,12 +421,51 @@
       setTimeout(() => s.remove(), 1700);
     }
   }
+  const milestones = { 25: 'Được 1/4 chặng đường rồi 💪', 50: 'Nửa đường rồi, cố lên vợ ơi! 🔥', 75: 'Sắp tới rồi, đừng bỏ cuộc nha 😆', 90: 'Còn 10 cái nữa thôi!!! 🤩', 99: 'Một cái cuối cùng… 🥺' };
+  const bar = document.getElementById('bar');
+  const ptext = document.getElementById('progress-text');
+  const reopen = document.getElementById('reopen-gift');
+  function renderProgress() {
+    bar.style.width = (n / GOAL * 100) + '%';
+    if (n >= GOAL) { ptext.textContent = 'Em đã mở khoá món quà đặc biệt 💝'; reopen.classList.add('show'); }
+    else ptext.textContent = n ? `${n}/${GOAL} trái tim · tới ${GOAL} sẽ có quà bất ngờ 🎁` : 'Bấm đủ 100 lần sẽ có quà bất ngờ 🎁';
+  }
+  renderProgress();
+
   document.getElementById('heart').addEventListener('click', e => {
-    n++;
     const r = e.currentTarget.getBoundingClientRect();
     burst(r.left + r.width / 2, r.top + r.height / 2);
-    document.getElementById('love-count').textContent = msgs[(n - 1) % msgs.length] + '  ×' + n;
+    if (n >= GOAL) { document.getElementById('love-count').textContent = msgs[Math.floor(Math.random() * msgs.length)]; return; }
+    n++;
+    try { localStorage.setItem('loveCount', n); } catch (_) {}
+    document.getElementById('love-count').textContent = (milestones[n] || msgs[(n - 1) % msgs.length]) + '  ×' + n;
+    renderProgress();
+    if (n === GOAL) setTimeout(showGift, 500);
   });
+
+  /* special gift at 100 hearts */
+  const gift = document.getElementById('gift');
+  const giftbox = document.getElementById('giftbox');
+  function showGift() {
+    gift.classList.remove('opened'); giftbox.classList.remove('opening');
+    gift.classList.add('show'); document.body.classList.add('celebrate');
+    giftbox.focus();
+  }
+  function openGift() {
+    if (giftbox.classList.contains('opening')) return;
+    giftbox.classList.add('opening');
+    const r = giftbox.getBoundingClientRect();
+    burst(r.left + r.width / 2, r.top + r.height / 3, 30);
+    if (!reduce) for (let i = 0; i < 90; i++) setTimeout(spawnPetal, i * 25);
+    setTimeout(() => { gift.classList.add('opened'); document.getElementById('close-gift').focus(); }, 800);
+  }
+  giftbox.addEventListener('click', openGift);
+  giftbox.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openGift(); } });
+  function hideGift() { gift.classList.remove('show'); document.body.classList.remove('celebrate'); }
+  document.getElementById('close-gift').addEventListener('click', hideGift);
+  gift.addEventListener('click', e => { if (e.target === gift && gift.classList.contains('opened')) hideGift(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') hideGift(); });
+  reopen.addEventListener('click', () => { showGift(); openGift(); });
 
   /* soft music box melody via Web Audio (no external file) */
   let ctx, playing = false, timer;
