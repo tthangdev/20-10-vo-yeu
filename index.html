@@ -187,10 +187,7 @@
   }
   @keyframes pop { to { transform: translate(var(--dx), -160px) scale(.6); opacity: 0; } }
 
-  .progress { max-width: 280px; margin: 14px auto 0; }
-  .bar { height: 10px; border-radius: 99px; background: rgba(201, 80, 107, .14); overflow: hidden; }
-  .bar span { display: block; height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, var(--rose-soft), var(--rose)); transition: width .3s ease; }
-  .progress small { display: block; margin-top: 6px; font-size: 13px; color: var(--ink-soft); }
+  .unlocked-text { display: block; margin-top: 6px; font-size: 13px; color: var(--ink-soft); }
   #reopen-gift {
     display: none; margin: 18px auto 0; padding: 10px 20px; border: 0; border-radius: 99px; cursor: pointer;
     font: 500 15px "Be Vietnam Pro", sans-serif; color: #fff;
@@ -303,10 +300,7 @@
     <button class="big-heart" id="heart" aria-label="Gửi tim">❤️</button>
     <p>Bấm vào trái tim nếu em cũng yêu anh 🥰</p>
     <div id="love-count" aria-live="polite"></div>
-    <div class="progress">
-      <div class="bar"><span id="bar"></span></div>
-      <small id="progress-text">Bấm đủ 100 lần sẽ có quà bất ngờ 🎁</small>
-    </div>
+    <small id="progress-text" class="unlocked-text"></small>
     <button id="reopen-gift">🎁 Xem lại món quà</button>
   </section>
 
@@ -420,14 +414,10 @@
       setTimeout(() => s.remove(), 1700);
     }
   }
-  const milestones = { 25: 'Được 1/4 chặng đường rồi 💪', 50: 'Nửa đường rồi, cố lên vợ ơi! 🔥', 75: 'Sắp tới rồi, đừng bỏ cuộc nha 😆', 90: 'Còn 10 cái nữa thôi!!! 🤩', 99: 'Một cái cuối cùng… 🥺' };
-  const bar = document.getElementById('bar');
   const ptext = document.getElementById('progress-text');
   const reopen = document.getElementById('reopen-gift');
   function renderProgress() {
-    bar.style.width = (n / GOAL * 100) + '%';
     if (n >= GOAL) { ptext.textContent = 'Em đã mở khoá món quà đặc biệt 💝'; reopen.classList.add('show'); }
-    else ptext.textContent = n ? `${n}/${GOAL} trái tim · tới ${GOAL} sẽ có quà bất ngờ 🎁` : 'Bấm đủ 100 lần sẽ có quà bất ngờ 🎁';
   }
   renderProgress();
 
@@ -437,7 +427,7 @@
     if (n >= GOAL) { document.getElementById('love-count').textContent = msgs[Math.floor(Math.random() * msgs.length)]; return; }
     n++;
     try { localStorage.setItem('loveCount', n); } catch (_) {}
-    document.getElementById('love-count').textContent = (milestones[n] || msgs[(n - 1) % msgs.length]) + '  ×' + n;
+    document.getElementById('love-count').textContent = msgs[(n - 1) % msgs.length] + '  ×' + n;
     renderProgress();
     if (n === GOAL) setTimeout(showGift, 500);
   });
